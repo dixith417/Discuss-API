@@ -2,22 +2,24 @@ package com.example.request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.validation.constraints.NotNull;
+import javax.persistence.Column;
 
 @Getter
 @Setter
+@NoArgsConstructor
 public class UpdateCommentModel {
-
-    @NotNull(message = "Id is required")
     @JsonProperty("id")
     private Integer id;
 
     @JsonProperty("rating")
     private String rating;
 
-    @JsonProperty("comment")
+    @JsonProperty( "comment")
     private String comment;
 
+    @JsonProperty( "author")
+    private String author;
 }

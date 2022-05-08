@@ -1,13 +1,20 @@
 package com.example.controller;
 
+import com.example.entities.CandidateInfo;
 import com.example.entities.Comment;
+import com.example.repository.CandidateInfoRepository;
 import com.example.repository.CommentRepository;
+import com.example.request.AddCommentModel;
 import com.example.request.CreateCommentModel;
 import com.example.request.UpdateCommentModel;
+import com.example.response.CommentResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -17,31 +24,45 @@ public class CommentController {
     @Autowired
     CommentRepository commentRepository;
 
+    @Autowired
+    CandidateInfoRepository candidateInfoRepository;
+
     @GetMapping("getAllComments")
-    public List<Comment> getAllComments() {
-        return commentRepository.findAll();
+    public List<CommentResponse> getAllComments() {
+
+        List<Comment> commentList = commentRepository.findAll();
+        List<CommentResponse> commentResponseList = new ArrayList<>();
+        commentList.forEach(comment -> {
+            commentResponseList.add(new CommentResponse(comment));
+        });
+        return commentResponseList;
     }
 
     @PostMapping("addComment")
-    public Comment addComment (@RequestBody CreateCommentModel createCommentModel) {
-        Comment comment = new Comment(createCommentModel);
-        return commentRepository.save(comment);
+    public CommentResponse addComment(@RequestBody AddCommentModel addCommentModel) {
+        CandidateInfo candidate = candidateInfoRepository.findById(addCommentModel.getCandidateId()).get();
+        Comment comment = new Comment();
+        comment.setComment(addCommentModel.getComment());
+        comment.setRating(addCommentModel.getRating());
+//        Setting FK
+        comment.setCandidateInfo(candidate);
+        comment.setAuthor(addCommentModel.getAuthor());
+//        set date
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("uuuu/MM/dd HH:mm:ss");
+        LocalDateTime now = LocalDateTime.now();
+        comment.setDate(dtf.format(now));
+
+        commentRepository.save(comment);
+        return new CommentResponse(comment);
     }
 
     @PutMapping("updateComment")
-    public Comment updateComment (@Valid @RequestBody UpdateCommentModel updateCommentModel) {
-        Comment oldComment = commentRepository.findById(updateCommentModel.getId()).get();
-        oldComment.setComment(updateCommentModel.getComment());
-        oldComment.setRating(updateCommentModel.getRating());
-        return commentRepository.save(oldComment);
-    }
-
-    @DeleteMapping("deleteComment/{id}")
-    public String deleteComment (@PathVariable Integer id) {
-        if(!commentRepository.existsById(id)) {
-            return "Comment already deleted or it does not exist";
-        }
-        commentRepository.deleteById(id);
-        return "Comment deleted successfully";
+    public CommentResponse updateComment (@RequestBody UpdateCommentModel updateCommentModel) {
+        Comment comment = commentRepository.getById(updateCommentModel.getId());
+        comment.setComment(updateCommentModel.getComment());
+        comment.setRating(updateCommentModel.getRating());
+        comment.setAuthor(updateCommentModel.getAuthor());
+        commentRepository.save(comment);
+        return new CommentResponse(comment);
     }
 }

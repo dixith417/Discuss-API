@@ -10,6 +10,7 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
+import java.util.List;
 
 @Getter
 @Setter
@@ -23,9 +24,6 @@ public class Comment {
     @Column(name = "id")
     private Integer id;
 
-    @Column(name = "item_id")
-    private Integer itemId;
-
     @Column(name = "rating")
     private String rating;
 
@@ -38,10 +36,13 @@ public class Comment {
     @Column(name = "date")
     private String date;
 
+    @ManyToOne
+    @JoinColumn(name = "candidate_id")
+    private CandidateInfo candidateInfo;
+
     public Comment(CreateCommentModel createCommentModel) {
         this.author = createCommentModel.getAuthor();
         this.rating = createCommentModel.getRating();
-        this.itemId = createCommentModel.getItemId();
         this.comment = createCommentModel.getComment();
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("uuuu/MM/dd HH:mm:ss");
         LocalDateTime now = LocalDateTime.now();
