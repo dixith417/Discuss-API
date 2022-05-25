@@ -27,7 +27,7 @@ public class CandidateInfoController {
     @Autowired
     CommentRepository commentRepository;
 
-    @CrossOrigin(origins = "http://localhost:3000")
+    @CrossOrigin(origins = {"http://localhost:3000", "http://localhost:1234"})
     @GetMapping("getAllCandidates")
     public List<CandidateResponse> getAllCandidates () {
 
@@ -39,7 +39,7 @@ public class CandidateInfoController {
         return candidateResponses;
     }
 
-    @CrossOrigin(origins = "http://localhost:3000")
+    @CrossOrigin(origins = {"http://localhost:3000", "http://localhost:1234"})
     @PostMapping("addCandidate")
     public CandidateResponse addCandidate (@RequestBody CreateCandidateModel createCandidateModel) {
         CandidateInfo candidate = new CandidateInfo(createCandidateModel);
@@ -66,7 +66,7 @@ public class CandidateInfoController {
         return new CandidateResponse(candidate);
     }
 
-    @CrossOrigin(origins = "http://localhost:3000")
+    @CrossOrigin(origins = {"http://localhost:3000", "http://localhost:1234"})
     @PutMapping("updateCandidate")
     public CandidateResponse updateCandidate (@Valid @RequestBody UpdateCandidateModel updateCandidateModel) {
         CandidateInfo candidate = candidateInfoRepository.findById(updateCandidateModel.getId()).get();
@@ -77,7 +77,7 @@ public class CandidateInfoController {
         return new CandidateResponse(candidate);
     }
 
-    @CrossOrigin(origins = "http://localhost:3000")
+    @CrossOrigin(origins = {"http://localhost:3000", "http://localhost:1234"})
     @DeleteMapping("delete/{id}")
     public String deleteCandidate (@PathVariable Integer id) {
         if(!candidateInfoRepository.existsById(id)) {

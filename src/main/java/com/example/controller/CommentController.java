@@ -27,7 +27,7 @@ public class CommentController {
     @Autowired
     CandidateInfoRepository candidateInfoRepository;
 
-    @CrossOrigin(origins = "http://localhost:3000")
+    @CrossOrigin(origins = {"http://localhost:3000", "http://localhost:1234"})
     @GetMapping("getAllComments")
     public List<CommentResponse> getAllComments() {
 
@@ -39,7 +39,7 @@ public class CommentController {
         return commentResponseList;
     }
 
-    @CrossOrigin(origins = "http://localhost:3000")
+    @CrossOrigin(origins = {"http://localhost:3000", "http://localhost:1234"})
     @PostMapping("addComment")
     public CommentResponse addComment(@RequestBody AddCommentModel addCommentModel) {
         CandidateInfo candidate = candidateInfoRepository.findById(addCommentModel.getCandidateId()).get();
@@ -58,7 +58,7 @@ public class CommentController {
         return new CommentResponse(comment);
     }
 
-    @CrossOrigin(origins = "http://localhost:3000")
+    @CrossOrigin(origins = {"http://localhost:3000", "http://localhost:1234"})
     @PutMapping("updateComment")
     public CommentResponse updateComment (@RequestBody UpdateCommentModel updateCommentModel) {
         Comment comment = commentRepository.getById(updateCommentModel.getId());
