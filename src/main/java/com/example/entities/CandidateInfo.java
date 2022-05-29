@@ -26,13 +26,13 @@ public class CandidateInfo {
     @Column(name = "name")
     private String name;
 
-    @Column(name = "image")
+    @Column(name = "image", length = 2500)
     private String image;
 
     @Column(name = "featured")
     private boolean featured;
 
-    @Column(name = "description")
+    @Column(name = "description", length = 500)
     private String description;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "candidateInfo")
